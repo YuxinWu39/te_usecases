@@ -1,0 +1,1288 @@
+#include "appliance_schedules.glm"
+module powerflow {
+  NR_iteration_limit 50;
+  solver_method NR;
+};
+module tape;
+module climate;
+module residential {
+  implicit_enduses NONE;
+};
+module generators;
+clock {
+  timezone PST+8PDT;
+  stoptime '2009-08-09 04:30:00';
+  starttime '2009-08-08 08:00:00';
+};
+object meter {
+  nominal_voltage 7216.88;
+  phases ABCN;
+  groupid branch_1_meter;
+  name branch_1_meter_2;
+};
+object line_spacing {
+  distance_CN 24 in;
+  distance_BN 48 in;
+  distance_AN 60 in;
+  distance_AC 48 in;
+  distance_BC 24 in;
+  distance_AB 24 in;
+  name line_spacing_2;
+};
+object underground_line_conductor {
+  shield_resistance 0;
+  shield_gmr 0;
+  neutral_strands 20;
+  neutral_diameter 0.19;
+  neutral_resistance 9.6;
+  neutral_gmr 0.005;
+  conductor_resistance 0.109;
+  conductor_diameter 1.2500;
+  conductor_gmr 0.04;
+  outer_diameter 2.20;
+  name underground_line_conductor_1;
+};
+object line_configuration {
+  name line_configuration_2;
+  spacing line_spacing_2;
+  conductor_N underground_line_conductor_1;
+  conductor_C underground_line_conductor_1;
+  conductor_B underground_line_conductor_1;
+  conductor_A underground_line_conductor_1;
+};
+object transformer_configuration {
+  impedance 0.015+0.0675j;
+  powerA_rating 250;
+  power_rating 250;
+  secondary_voltage 124 V;
+  primary_voltage 7200 V;
+  install_type PADMOUNT;
+  connect_type SINGLE_PHASE_CENTER_TAPPED;
+  name house_transformer;
+};
+object triplex_meter {
+  nominal_voltage 124.00;
+  phases AS;
+  name b1m1_house_node;
+};
+object meter {
+  nominal_voltage 7216.88;
+  phases ABCN;
+  groupid branch_1_meter;
+  name branch_1_meter_1;
+};
+object transformer {
+  phases AS;
+  name b1m1_house_trans;
+  configuration house_transformer;
+  to b1m1_house_node;
+  from branch_1_meter_1;
+};
+object triplex_meter {
+  nominal_voltage 124.00;
+  phases AS;
+  name b1m3_house_meter;
+};
+object house {
+  air_temperature 72;
+  thermostat_deadband 2.5;
+  cooling_setpoint 73;
+  ceiling_height 12;
+  glass_type GLASS;
+  Rwall 20;
+  hvac_motor_efficiency 0.3;
+  name b1m3_house;
+  parent b1m3_house_meter;
+};
+object ZIPload {
+  name ZIPload_13;
+  heat_fraction 0.76;
+  impedance_pf -0.880;
+  current_pf 0.420;
+  power_pf -0.780;
+  current_fraction 0.000000;
+  impedance_fraction 0.400000;
+  power_fraction 0.600000;
+  base_power unresponsive_loads*2.2355;
+  schedule_skew 260;
+  parent b1m3_house;
+};
+object triplex_meter {
+  nominal_voltage 124.00;
+  phases AS;
+  name b2m3_house_meter;
+};
+object house {
+  air_temperature 73;
+  thermostat_deadband 1.5;
+  cooling_setpoint 73.5;
+  airchange_per_hour 0.8;
+  aspect_ratio 3;
+  window_frame ALUMINUM;
+  name b2m3_house;
+  parent b2m3_house_meter;
+};
+object ZIPload {
+  name ZIPload_37;
+  heat_fraction 0.72;
+  impedance_pf 1.000;
+  current_pf 0.900;
+  power_pf 0.900;
+  current_fraction 0.100000;
+  impedance_fraction 0.800000;
+  power_fraction 0.100000;
+  base_power unresponsive_loads*0.8905;
+  schedule_skew -1557;
+  parent b2m3_house;
+};
+object climate {
+  interpolate LINEAR;
+  tmyfile TN-Nashville.tmy2;
+  name Nashville TN;
+};
+object line_spacing {
+  distance_CN 51.6 in;
+  distance_BN 51.6 in;
+  distance_AN 51.6 in;
+  distance_AC 57.6 in;
+  distance_BC 57.6 in;
+  distance_AB 57.6 in;
+  name line_spacing_1;
+};
+object overhead_line_conductor {
+  resistance 0.1;
+  geometric_mean_radius 0.01200 ft;
+  rating.summer.continuous 256.0;
+  name overhead_line_conductor_1;
+};
+object line_configuration {
+  name line_configuration_1;
+  spacing line_spacing_1;
+  conductor_N overhead_line_conductor_1;
+  conductor_C overhead_line_conductor_1;
+  conductor_B overhead_line_conductor_1;
+  conductor_A overhead_line_conductor_1;
+};
+
+object overhead_line_conductor {
+  resistance 0.2;
+  geometric_mean_radius 0.02200 ft;
+  rating.summer.continuous 150.0;
+  name overhead_line_conductor_2;
+};
+object transformer_configuration {
+  impedance 0.00033+0.0022j;
+  power_rating 8.4 MVA;
+  secondary_voltage 7216;
+  primary_voltage 132790;
+  install_type PADMOUNT;
+  connect_type WYE_WYE;
+  name substation_transformer_config;
+};
+object triplex_line_conductor {
+  geometric_mean_radius 0.0111;
+  resistance 0.57;
+  name Name_1_0_AA_triplex;
+};
+object triplex_line_configuration {
+  diameter 0.4;
+  insulation_thickness 0.1;
+  name triplex_line_config;
+  conductor_N Name_1_0_AA_triplex;
+  conductor_2 Name_1_0_AA_triplex;
+  conductor_1 Name_1_0_AA_triplex;
+};
+object node {
+  nominal_voltage 132790;
+  phases ABCN;
+  bustype SWING;
+  name feeder_head;
+};
+object meter {
+  nominal_voltage 7216.88;
+  phases ABCN;
+  name substation_meter;
+};
+object transformer {
+  phases ABCN;
+  name substation_transformer;
+  configuration substation_transformer_config;
+  to substation_meter;
+  from feeder_head;
+};
+object overhead_line {
+  length 10000;
+  phases ABCN;
+  name branch_1_line_1;
+  configuration line_configuration_1;
+  to branch_1_meter_1;
+  from substation_meter;
+};
+object triplex_meter {
+  nominal_voltage 124.00;
+  phases AS;
+  name b1m1_house_meter;
+};
+object triplex_line {
+  length 10;
+  phases AS;
+  name b1m1_tl;
+  configuration triplex_line_config;
+  to b1m1_house_meter;
+  from b1m1_house_node;
+};
+object house {
+  air_temperature 72.5;
+  thermostat_deadband 2;
+  cooling_setpoint 75;
+  floor_area 1040;
+  cooling_COP 3.90;
+  hvac_power_factor 0.97;
+  thermal_integrity_level LITTLE;
+  name b1m1_house;
+  parent b1m1_house_meter;
+};
+object evcharger_det {
+  name b1m1_evcharger;
+  variation_mean 0.0;
+  variation_std_dev 0.0;
+  variation_trip_mean 0.0;
+  variation_trip_std_dev 0.0;
+  mileage_classification 33.0;
+  work_charging_available false;
+  arrival_at_work 800;	
+  duration_at_work 10 h;
+  travel_distance 15.0;
+  arrival_at_home 0000;
+  duration_at_home 7 h;
+  mileage_efficiency 3.846;
+  charging_efficiency 0.90;
+  vehicle_location HOME;
+  power_state ON;
+  parent b1m1_house;
+};
+
+object ZIPload {
+  name ZIPload0;
+  heat_fraction 0.91;
+  impedance_pf -0.880;
+  current_pf 0.420;
+  power_pf -0.780;
+  current_fraction 0.000000;
+  impedance_fraction 0.400000;
+  power_fraction 0.600000;
+  base_power unresponsive_loads*1.8752;
+  schedule_skew -685;
+  parent b1m1_house;
+};
+object ZIPload {
+  name ZIPload_0;
+  heat_fraction 0.70;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*0.4354;
+  schedule_skew -685;
+  parent b1m1_house;
+};
+object ZIPload {
+  name ZIPload_1;
+  heat_fraction 0.86;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*0.7763;
+  schedule_skew -685;
+  parent b1m1_house;
+};
+object ZIPload {
+  name ZIPload_2;
+  heat_fraction 0.77;
+  impedance_pf 1.000;
+  current_pf 0.900;
+  power_pf 0.900;
+  current_fraction 0.100000;
+  impedance_fraction 0.800000;
+  power_fraction 0.100000;
+  base_power unresponsive_loads*1.0019;
+  schedule_skew -685;
+  parent b1m1_house;
+};
+object ZIPload {
+  name ZIPload_3;
+  heat_fraction 0.80;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*0.9110;
+  schedule_skew -685;
+  parent b1m1_house;
+};
+object ZIPload {
+  name ZIPload_4;
+  heat_fraction 0.86;
+  impedance_pf 1.000;
+  current_pf 0.000;
+  power_pf 0.000;
+  current_fraction 0.000000;
+  impedance_fraction 1.000000;
+  power_fraction 0.000000;
+  base_power unresponsive_loads*1.0590;
+  schedule_skew -685;
+  parent b1m1_house;
+};
+object ZIPload {
+  name ZIPload_5;
+  heat_fraction 0.94;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*0.6381;
+  schedule_skew -685;
+  parent b1m1_house;
+};
+object triplex_meter {
+  nominal_voltage 124.00;
+  phases AS;
+  name b1m1_solar_meter;
+};
+object triplex_line {
+  length 10;
+  phases AS;
+  name b1m1_tl_solar;
+  configuration triplex_line_config;
+  to b1m1_solar_meter;
+  from b1m1_house_node;
+};
+object inverter {
+  rated_power 6000;
+  inverter_efficiency .95;
+  generator_mode SUPPLY_DRIVEN;
+  four_quadrant_control_mode CONSTANT_PF;
+  inverter_type FOUR_QUADRANT;
+  generator_status ONLINE;
+  phases AS;
+  name b1m1_solar_inv;
+  power_factor 1;
+  maximum_dc_power 6000;
+  inverter_manufacturer XANTREX;
+  parent b1m1_solar_meter;
+};
+object solar {
+  SOLAR_POWER_MODEL FLATPLATE;
+  SOLAR_TILT_MODEL SOLPOS;
+  orientation FIXED_AXIS;
+  orientation_azimuth 180;
+  efficiency 0.135;
+  tilt_angle 47.0;
+  area 250 ft^2;
+  panel_type SINGLE_CRYSTAL_SILICON;
+  generator_mode SUPPLY_DRIVEN;
+  generator_status ONLINE;
+  phases AS;
+  name b1m1_solar;
+  rated_power 5000;
+  parent b1m1_solar_inv;
+};
+object overhead_line {
+  length 5000;
+  phases ABCN;
+  name branch_1_line_2;
+  configuration line_configuration_1;
+  to branch_1_meter_2;
+  from branch_1_meter_1;
+};
+object triplex_meter {
+  nominal_voltage 124.00;
+  phases AS;
+  name b1m2_house_node;
+};
+object transformer {
+  phases AS;
+  name b1m2_house_trans;
+  configuration house_transformer;
+  to b1m2_house_node;
+  from branch_1_meter_2;
+};
+object triplex_meter {
+  nominal_voltage 124.00;
+  phases AS;
+  name b1m2_house_meter;
+};
+object triplex_line {
+  length 10;
+  phases AS;
+  name b1m2_tl;
+  configuration triplex_line_config;
+  to b1m2_house_meter;
+  from b1m2_house_node;
+};
+object house {
+  air_temperature 72;
+  thermostat_deadband 2.5;
+  cooling_setpoint 73;
+  over_sizing_factor 1.3;
+  window_wall_ratio 0.5;
+  Rroof 40;
+  name b1m2_house;
+  parent b1m2_house_meter;
+};
+object ZIPload {
+  name ZIPload_6;
+  heat_fraction 0.88;
+  impedance_pf -0.880;
+  current_pf 0.420;
+  power_pf -0.780;
+  current_fraction 0.000000;
+  impedance_fraction 0.400000;
+  power_fraction 0.600000;
+  base_power unresponsive_loads*1.9408;
+  schedule_skew 35;
+  parent b1m2_house;
+};
+object ZIPload {
+  name ZIPload_7;
+  heat_fraction 0.81;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*0.8239;
+  schedule_skew 35;
+  parent b1m2_house;
+};
+object ZIPload {
+  name ZIPload_8;
+  heat_fraction 0.93;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*0.4240;
+  schedule_skew 35;
+  parent b1m2_house;
+};
+object ZIPload {
+  name ZIPload_9;
+  heat_fraction 0.93;
+  impedance_pf 1.000;
+  current_pf 0.900;
+  power_pf 0.900;
+  current_fraction 0.100000;
+  impedance_fraction 0.800000;
+  power_fraction 0.100000;
+  base_power unresponsive_loads*0.8937;
+  schedule_skew 35;
+  parent b1m2_house;
+};
+object ZIPload {
+  name ZIPload_10;
+  heat_fraction 0.65;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*0.3775;
+  schedule_skew 35;
+  parent b1m2_house;
+};
+object ZIPload {
+  name ZIPload_11;
+  heat_fraction 0.79;
+  impedance_pf 1.000;
+  current_pf 0.000;
+  power_pf 0.000;
+  current_fraction 0.000000;
+  impedance_fraction 1.000000;
+  power_fraction 0.000000;
+  base_power unresponsive_loads*0.7730;
+  schedule_skew 35;
+  parent b1m2_house;
+};
+object ZIPload {
+  name ZIPload_12;
+  heat_fraction 0.80;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*0.3543;
+  schedule_skew 35;
+  parent b1m2_house;
+};
+object triplex_meter {
+  nominal_voltage 124.00;
+  phases AS;
+  name b1m2_solar_meter;
+};
+object triplex_line {
+  length 10;
+  phases AS;
+  name b1m2_tl_solar;
+  configuration triplex_line_config;
+  to b1m2_solar_meter;
+  from b1m2_house_node;
+};
+object inverter {
+  rated_power 6000;
+  inverter_efficiency .95;
+  generator_mode SUPPLY_DRIVEN;
+  four_quadrant_control_mode CONSTANT_PF;
+  inverter_type FOUR_QUADRANT;
+  generator_status ONLINE;
+  phases AS;
+  name b1m2_solar_inv;
+  power_factor 1;
+  maximum_dc_power 6000;
+  inverter_manufacturer XANTREX;
+  parent b1m2_solar_meter;
+};
+object solar {
+  SOLAR_POWER_MODEL FLATPLATE;
+  SOLAR_TILT_MODEL SOLPOS;
+  orientation FIXED_AXIS;
+  orientation_azimuth 180;
+  efficiency 0.135;
+  tilt_angle 47.0;
+  area 350 ft^2;
+  panel_type SINGLE_CRYSTAL_SILICON;
+  generator_mode SUPPLY_DRIVEN;
+  generator_status ONLINE;
+  phases AS;
+  name b1m2_solar;
+  rated_power 5000;
+  parent b1m2_solar_inv;
+};
+object meter {
+  nominal_voltage 7216.88;
+  phases ABCN;
+  groupid branch_1_meter;
+  name branch_1_meter_3;
+};
+object overhead_line {
+  length 15000;
+  phases ABCN;
+  name branch_1_line_3;
+  configuration line_configuration_1;
+  to branch_1_meter_3;
+  from branch_1_meter_2;
+};
+object triplex_meter {
+  nominal_voltage 124.00;
+  phases AS;
+  name b1m3_house_node;
+};
+object transformer {
+  phases AS;
+  name b1m3_house_trans;
+  configuration house_transformer;
+  to b1m3_house_node;
+  from branch_1_meter_3;
+};
+object triplex_line {
+  length 10;
+  phases AS;
+  name b1m3_tl;
+  configuration triplex_line_config;
+  to b1m3_house_meter;
+  from b1m3_house_node;
+};
+object ZIPload {
+  name ZIPload_14;
+  heat_fraction 0.66;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*0.8669;
+  schedule_skew 260;
+  parent b1m3_house;
+};
+object ZIPload {
+  name ZIPload_15;
+  heat_fraction 0.79;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*1.2708;
+  schedule_skew 260;
+  parent b1m3_house;
+};
+object ZIPload {
+  name ZIPload_16;
+  heat_fraction 0.93;
+  impedance_pf 1.000;
+  current_pf 0.900;
+  power_pf 0.900;
+  current_fraction 0.100000;
+  impedance_fraction 0.800000;
+  power_fraction 0.100000;
+  base_power unresponsive_loads*1.0217;
+  schedule_skew 260;
+  parent b1m3_house;
+};
+object ZIPload {
+  name ZIPload_17;
+  heat_fraction 0.94;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*1.3624;
+  schedule_skew 260;
+  parent b1m3_house;
+};
+object ZIPload {
+  name ZIPload_18;
+  heat_fraction 0.86;
+  impedance_pf 1.000;
+  current_pf 0.000;
+  power_pf 0.000;
+  current_fraction 0.000000;
+  impedance_fraction 1.000000;
+  power_fraction 0.000000;
+  base_power unresponsive_loads*0.8736;
+  schedule_skew 260;
+  parent b1m3_house;
+};
+object ZIPload {
+  name ZIPload_19;
+  heat_fraction 0.90;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*2.0009;
+  schedule_skew 260;
+  parent b1m3_house;
+};
+object triplex_meter {
+  nominal_voltage 124.00;
+  phases AS;
+  name b1m3_solar_meter;
+};
+object triplex_line {
+  length 10;
+  phases AS;
+  name b1m3_tl_solar;
+  configuration triplex_line_config;
+  to b1m3_solar_meter;
+  from b1m3_house_node;
+};
+object inverter {
+  rated_power 6000;
+  inverter_efficiency .95;
+  generator_mode SUPPLY_DRIVEN;
+  four_quadrant_control_mode CONSTANT_PF;
+  inverter_type FOUR_QUADRANT;
+  generator_status ONLINE;
+  phases AS;
+  name b1m3_solar_inv;
+  power_factor 1;
+  maximum_dc_power 6000;
+  inverter_manufacturer XANTREX;
+  parent b1m3_solar_meter;
+};
+object solar {
+  SOLAR_POWER_MODEL FLATPLATE;
+  SOLAR_TILT_MODEL SOLPOS;
+  orientation FIXED_AXIS;
+  orientation_azimuth 180;
+  efficiency 0.135;
+  tilt_angle 47.0;
+  area 300 ft^2;
+  panel_type SINGLE_CRYSTAL_SILICON;
+  generator_mode SUPPLY_DRIVEN;
+  generator_status ONLINE;
+  phases AS;
+  name b1m3_solar;
+  rated_power 5000;
+  parent b1m3_solar_inv;
+};
+object meter {
+  nominal_voltage 7216.88;
+  phases ABCN;
+  groupid branch_2_meter;
+  name branch_2_meter_1;
+};
+object overhead_line {
+  length 10000;
+  phases ABCN;
+  name branch_2_line_1;
+  configuration line_configuration_1;
+  to branch_2_meter_1;
+  from substation_meter;
+};
+object triplex_meter {
+  nominal_voltage 124.00;
+  phases AS;
+  name b2m1_house_node;
+};
+object transformer {
+  phases AS;
+  name b2m1_house_trans;
+  configuration house_transformer;
+  to b2m1_house_node;
+  from branch_2_meter_1;
+};
+object triplex_meter {
+  nominal_voltage 124.00;
+  phases AS;
+  name b2m1_house_meter;
+};
+object triplex_line {
+  length 10;
+  phases AS;
+  name b2m1_tl;
+  configuration triplex_line_config;
+  to b2m1_house_meter;
+  from b2m1_house_node;
+};
+object house {
+  air_temperature 71.5;
+  thermostat_deadband 2.5;
+  cooling_setpoint 72;
+  number_of_stories 3;
+  duct_pressure_drop 0.7;
+  latent_load_fraction 0.45;
+  name b2m1_house;
+  parent b2m1_house_meter;
+};
+object ZIPload {
+  name ZIPload_20;
+  heat_fraction 0.67;
+  impedance_pf 1.000;
+  current_pf 0.000;
+  power_pf 0.000;
+  current_fraction 0.000000;
+  impedance_fraction 1.000000;
+  power_fraction 0.000000;
+  base_power unresponsive_loads*4.1069;
+  schedule_skew 434;
+  parent b2m1_house;
+};
+object ZIPload {
+  name ZIPload_21;
+  heat_fraction 0.80;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*1.3204;
+  schedule_skew 434;
+  parent b2m1_house;
+};
+object ZIPload {
+  name ZIPload_22;
+  heat_fraction 0.82;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*1.4569;
+  schedule_skew 434;
+  parent b2m1_house;
+};
+object ZIPload {
+  name ZIPload_23;
+  heat_fraction 0.65;
+  impedance_pf 1.000;
+  current_pf 0.900;
+  power_pf 0.900;
+  current_fraction 0.100000;
+  impedance_fraction 0.800000;
+  power_fraction 0.100000;
+  base_power unresponsive_loads*1.0100;
+  schedule_skew 434;
+  parent b2m1_house;
+};
+object ZIPload {
+  name ZIPload_24;
+  heat_fraction 0.72;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*0.9152;
+  schedule_skew 434;
+  parent b2m1_house;
+};
+object ZIPload {
+  name ZIPload_25;
+  heat_fraction 0.87;
+  impedance_pf 1.000;
+  current_pf 0.000;
+  power_pf 0.000;
+  current_fraction 0.000000;
+  impedance_fraction 1.000000;
+  power_fraction 0.000000;
+  base_power unresponsive_loads*1.0532;
+  schedule_skew 434;
+  parent b2m1_house;
+};
+object ZIPload {
+  name ZIPload_26;
+  heat_fraction 0.92;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*1.3023;
+  schedule_skew 434;
+  parent b2m1_house;
+};
+object triplex_meter {
+  nominal_voltage 124.00;
+  phases AS;
+  name b2m1_solar_meter;
+};
+object triplex_line {
+  length 10;
+  phases AS;
+  name b2m1_tl_solar;
+  configuration triplex_line_config;
+  to b2m1_solar_meter;
+  from b2m1_house_node;
+};
+object inverter {
+  rated_power 6000;
+  inverter_efficiency .95;
+  generator_mode SUPPLY_DRIVEN;
+  four_quadrant_control_mode CONSTANT_PF;
+  inverter_type FOUR_QUADRANT;
+  generator_status ONLINE;
+  phases AS;
+  name b2m1_solar_inv;
+  power_factor 1;
+  maximum_dc_power 6000;
+  inverter_manufacturer XANTREX;
+  parent b2m1_solar_meter;
+};
+object solar {
+  SOLAR_POWER_MODEL FLATPLATE;
+  SOLAR_TILT_MODEL SOLPOS;
+  orientation FIXED_AXIS;
+  orientation_azimuth 180;
+  efficiency 0.135;
+  tilt_angle 47.0;
+  area 325 ft^2;
+  panel_type SINGLE_CRYSTAL_SILICON;
+  generator_mode SUPPLY_DRIVEN;
+  generator_status ONLINE;
+  phases AS;
+  name b2m1_solar;
+  rated_power 5000;
+  parent b2m1_solar_inv;
+};
+object meter {
+  nominal_voltage 7216.88;
+  phases ABCN;
+  groupid branch_2_meter;
+  name branch_2_meter_2;
+};
+object overhead_line {
+  length 5000;
+  phases ABCN;
+  name branch_2_line_2;
+  configuration line_configuration_1;
+  to branch_2_meter_2;
+  from branch_2_meter_1;
+};
+object triplex_meter {
+  nominal_voltage 124.00;
+  phases AS;
+  name b2m2_house_node;
+};
+object transformer {
+  phases AS;
+  name b2m2_house_trans;
+  configuration house_transformer;
+  to b2m2_house_node;
+  from branch_2_meter_2;
+};
+object triplex_meter {
+  nominal_voltage 124.00;
+  phases AS;
+  name b2m2_house_meter;
+};
+object triplex_line {
+  length 10;
+  phases AS;
+  name b2m2_tl;
+  configuration triplex_line_config;
+  to b2m2_house_meter;
+  from b2m2_house_node;
+};
+object house {
+  air_temperature 73;
+  thermostat_deadband 2;
+  cooling_setpoint 74;
+  Rwall 13.5;
+  total_thermal_mass_per_floor_area 2.7;
+  name b2m2_house;
+  parent b2m2_house_meter;
+};
+object ZIPload {
+  name ZIPload_27;
+  heat_fraction 0.65;
+  impedance_pf 1.000;
+  current_pf 0.000;
+  power_pf 0.000;
+  current_fraction 0.000000;
+  impedance_fraction 1.000000;
+  power_fraction 0.000000;
+  base_power unresponsive_loads*1.7590;
+  schedule_skew -748;
+  parent b2m2_house;
+};
+object ZIPload {
+  name ZIPload_28;
+  heat_fraction 0.87;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*0.5772;
+  schedule_skew -748;
+  parent b2m2_house;
+};
+object ZIPload {
+  name ZIPload_29;
+  heat_fraction 0.80;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*0.6797;
+  schedule_skew -748;
+  parent b2m2_house;
+};
+object ZIPload {
+  name ZIPload_30;
+  heat_fraction 0.66;
+  impedance_pf 1.000;
+  current_pf 0.900;
+  power_pf 0.900;
+  current_fraction 0.100000;
+  impedance_fraction 0.800000;
+  power_fraction 0.100000;
+  base_power unresponsive_loads*0.7914;
+  schedule_skew -748;
+  parent b2m2_house;
+};
+object ZIPload {
+  name ZIPload_31;
+  heat_fraction 0.75;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*0.4258;
+  schedule_skew -748;
+  parent b2m2_house;
+};
+object ZIPload {
+  name ZIPload_32;
+  heat_fraction 0.78;
+  impedance_pf 1.000;
+  current_pf 0.000;
+  power_pf 0.000;
+  current_fraction 0.000000;
+  impedance_fraction 1.000000;
+  power_fraction 0.000000;
+  base_power unresponsive_loads*0.6813;
+  schedule_skew -748;
+  parent b2m2_house;
+};
+object ZIPload {
+  name ZIPload_33;
+  heat_fraction 0.81;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*0.7537;
+  schedule_skew -748;
+  parent b2m2_house;
+};
+object triplex_meter {
+  nominal_voltage 124.00;
+  phases AS;
+  name b2m2_solar_meter;
+};
+object triplex_line {
+  length 10;
+  phases AS;
+  name b2m2_tl_solar;
+  configuration triplex_line_config;
+  to b2m2_solar_meter;
+  from b2m2_house_node;
+};
+object inverter {
+  rated_power 6000;
+  inverter_efficiency .95;
+  generator_mode SUPPLY_DRIVEN;
+  four_quadrant_control_mode CONSTANT_PF;
+  inverter_type FOUR_QUADRANT;
+  generator_status ONLINE;
+  phases AS;
+  name b2m2_solar_inv;
+  power_factor 1;
+  maximum_dc_power 6000;
+  inverter_manufacturer XANTREX;
+  parent b2m2_solar_meter;
+};
+object solar {
+  SOLAR_POWER_MODEL FLATPLATE;
+  SOLAR_TILT_MODEL SOLPOS;
+  orientation FIXED_AXIS;
+  orientation_azimuth 180;
+  efficiency 0.135;
+  tilt_angle 47.0;
+  area 200 ft^2;
+  panel_type SINGLE_CRYSTAL_SILICON;
+  generator_mode SUPPLY_DRIVEN;
+  generator_status ONLINE;
+  phases AS;
+  name b2m2_solar;
+  rated_power 5000;
+  parent b2m2_solar_inv;
+};
+object meter {
+  nominal_voltage 7216.88;
+  phases ABCN;
+  groupid branch_2_meter;
+  name branch_2_meter_3;
+};
+object overhead_line {
+  length 15000;
+  phases ABCN;
+  name branch_2_line_3;
+  configuration line_configuration_1;
+  to branch_2_meter_3;
+  from branch_2_meter_2;
+};
+object triplex_meter {
+  nominal_voltage 124.00;
+  phases AS;
+  name b2m3_house_node;
+};
+object transformer {
+  phases AS;
+  name b2m3_house_trans;
+  configuration house_transformer;
+  to b2m3_house_node;
+  from branch_2_meter_3;
+};
+object triplex_line {
+  length 10;
+  phases AS;
+  name b2m3_tl;
+  configuration triplex_line_config;
+  to b2m3_house_meter;
+  from b2m3_house_node;
+};
+object ZIPload {
+  name ZIPload_34;
+  heat_fraction 0.88;
+  impedance_pf 1.000;
+  current_pf 0.000;
+  power_pf 0.000;
+  current_fraction 0.000000;
+  impedance_fraction 1.000000;
+  power_fraction 0.000000;
+  base_power unresponsive_loads*1.5860;
+  schedule_skew -1557;
+  parent b2m3_house;
+};
+object ZIPload {
+  name ZIPload_35;
+  heat_fraction 0.77;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*1.0618;
+  schedule_skew -1557;
+  parent b2m3_house;
+};
+object ZIPload {
+  name ZIPload_36;
+  heat_fraction 0.86;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*0.8285;
+  schedule_skew -1557;
+  parent b2m3_house;
+};
+object ZIPload {
+  name ZIPload_38;
+  heat_fraction 0.78;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*0.8028;
+  schedule_skew -1557;
+  parent b2m3_house;
+};
+object ZIPload {
+  name ZIPload_39;
+  heat_fraction 0.65;
+  impedance_pf 1.000;
+  current_pf 0.000;
+  power_pf 0.000;
+  current_fraction 0.000000;
+  impedance_fraction 1.000000;
+  power_fraction 0.000000;
+  base_power unresponsive_loads*0.3977;
+  schedule_skew -1557;
+  parent b2m3_house;
+};
+object ZIPload {
+  name ZIPload_40;
+  heat_fraction 0.77;
+  impedance_pf 0.970;
+  current_pf 0.970;
+  power_pf 0.970;
+  current_fraction 0.000000;
+  impedance_fraction 0.000000;
+  power_fraction 1.000000;
+  base_power unresponsive_loads*0.5787;
+  schedule_skew -1557;
+  parent b2m3_house;
+};
+object triplex_meter {
+  nominal_voltage 124.00;
+  phases AS;
+  name b2m3_solar_meter;
+};
+object triplex_line {
+  length 10;
+  phases AS;
+  name b2m3_tl_solar;
+  configuration triplex_line_config;
+  to b2m3_solar_meter;
+  from b2m3_house_node;
+};
+object inverter {
+  rated_power 6000;
+  inverter_efficiency .95;
+  generator_mode SUPPLY_DRIVEN;
+  four_quadrant_control_mode CONSTANT_PF;
+  inverter_type FOUR_QUADRANT;
+  generator_status ONLINE;
+  phases AS;
+  name b2m3_solar_inv;
+  power_factor 1;
+  maximum_dc_power 6000;
+  inverter_manufacturer XANTREX;
+  parent b2m3_solar_meter;
+};
+object solar {
+  SOLAR_POWER_MODEL FLATPLATE;
+  SOLAR_TILT_MODEL SOLPOS;
+  orientation FIXED_AXIS;
+  orientation_azimuth 180;
+  efficiency 0.135;
+  tilt_angle 47.0;
+  area 500 ft^2;
+  panel_type SINGLE_CRYSTAL_SILICON;
+  generator_mode SUPPLY_DRIVEN;
+  generator_status ONLINE;
+  phases AS;
+  name b2m3_solar;
+  rated_power 5000;
+  parent b2m3_solar_inv;
+};
+object recorder {
+  property measured_voltage_A, measured_current_A, measured_power_A.real, measured_power_A.imag;
+  interval 300;
+  file substation_data.csv;
+  name substation_recorder;
+  parent substation_meter;
+};
+object multi_recorder {
+  property b1m1_house_meter:measured_real_power, b1m2_house_meter:measured_real_power;
+  interval 300;
+  file house_load.csv;
+  name house_load;
+};
+object multi_recorder {
+  property b1m1_house:air_temperature, b1m2_house:air_temperature, b1m3_house:air_temperature, b2m1_house:air_temperature, b2m2_house:air_temperature, b2m3_house:air_temperature;
+  interval 300;
+  file house_temperatures.csv;
+  name house_temperatures;
+};
+object multi_recorder {
+  property b1m1_house:air_temperature, b1m1_house:outdoor_temperature, b1m1_house:is_COOL_on, b1m1_house:cooling_setpoint, b1m1_house_node:measured_real_power, b1m1_house_node:measured_real_energy, b1m1_solar_inv:VA_Out.real, b1m1_solar_meter:measured_real_energy, b1m1_solar_meter:measured_real_power;
+  interval 300;
+  file b1m1_house_data.csv;
+  name b1m1_house_data;
+};
+object multi_recorder {
+  property b2m3_house:air_temperature, b2m3_house:outdoor_temperature, b2m3_house:is_COOL_on, b2m3_house:cooling_setpoint, b2m3_house_meter:measured_real_power, b2m3_house_meter:measured_real_energy;
+  interval 300;
+  file b2m3_house_data.csv;
+  name b2m3_house_data;
+};
+object recorder {
+  property temperature, humidity, solar_direct, extraterrestrial_direct_normal;
+  interval 300;
+  file climate_data.csv;
+  name climate_recorder;
+  parent Nashville TN;
+};
